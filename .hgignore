@@ -9,3 +9,5 @@ _ReSharper.*/
 Thumbs.db
 
 *.orig
+
+nuget/Simple.Json/lib
