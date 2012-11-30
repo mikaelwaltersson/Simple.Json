@@ -590,8 +590,7 @@ namespace Simple.Json.Tests
             InstanceCountConstrained<TypeSerializer>.MaxInstanceCount = 0;
             try
             {
-                //Assert.Throws<InvalidOperationException>(() => new JsonSerializer(new TypeSerializer()));
-                new TypeSerializer();
+                Assert.Throws<InvalidOperationException>(() => new JsonSerializer(new TypeSerializer()));
             }
             finally 
             {
