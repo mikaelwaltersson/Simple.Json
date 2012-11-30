@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Simple.Json.Serialization
 {
-    public class TypeSerializer : ITypeSerializer
+    public class TypeSerializer : InstanceCountConstrained<TypeSerializer>, ITypeSerializer
     {
         public const string DynamicAssemblyName = "Simple.Json.Serialization.TypeSerializer.GeneratedTypes";
 
@@ -24,7 +24,7 @@ namespace Simple.Json.Serialization
         public static readonly TypeSerializer Default = new TypeSerializer();
 
         public TypeSerializer()
-        {
+        {                        
             classFactory = new ClassFactory(this);
             builderProviders = new ConcurrentDictionary<Type, IBuilderProvider>();
             deconstructors = new ConcurrentDictionary<Type, IDeconstructor>();

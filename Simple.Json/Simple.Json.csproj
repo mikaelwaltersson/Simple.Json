@@ -58,6 +58,7 @@
     <Compile Include="Serialization\IJsonOutput.cs" />
     <Compile Include="Serialization\ITypeSerializer.cs" />
     <Compile Include="Serialization\ITypeSerializerConfiguration.cs" />
+    <Compile Include="Serialization\InstanceCountConstrained.cs" />
     <Compile Include="Serialization\TypeSerializerConfigurationDefaults.cs" />
     <Compile Include="Serialization\TypeReflection.cs" />
     <Compile Include="Serialization\TypeSerializer.cs" />

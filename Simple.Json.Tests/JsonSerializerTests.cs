@@ -584,7 +584,20 @@ namespace Simple.Json.Tests
                     }));
         }
 
-
+        [Fact]
+        public void NumberOfInstanceAllocationsOfTypeSerializerIsLimited()
+        {
+            InstanceCountConstrained<TypeSerializer>.MaxInstanceCount = 0;
+            try
+            {
+                //Assert.Throws<InvalidOperationException>(() => new JsonSerializer(new TypeSerializer()));
+                new TypeSerializer();
+            }
+            finally 
+            {
+                InstanceCountConstrained<TypeSerializer>.MaxInstanceCount = InstanceCountConstrained<TypeSerializer>.DefaultMaxInstanceCount;    
+            }            
+        }
 
         void AssertCanSerializeAndDeserializeValue<T>(T value)
         {
