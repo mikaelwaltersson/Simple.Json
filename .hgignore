@@ -1,0 +1,11 @@
+syntax: glob
+
+*.suo
+*.user
+obj/*
+bin/*
+_ReSharper.*/
+
+Thumbs.db
+
+*.orig
