@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,20 +9,28 @@ namespace Simple.Json.Parsers
 {
     abstract class BasicParser
     {
-        string input;
-        int position;
+        const int BufferSize = 2048;
 
-        protected BasicParser(string input)
+        string buffer;
+        int position;
+        TextReader additionalInputReader;
+        int linePosition = 1;
+        int charPosition = 1;
+
+
+
+        protected BasicParser(string buffer, TextReader additionalInputReader = null)
         {
-            this.input = Argument.NotNull(input, "input");
+            this.buffer = Argument.NotNull(buffer, "buffer");
+            this.additionalInputReader = additionalInputReader;
         }
 
         protected char Token()
         {
-            if (position >= input.Length)
+            if (position >= buffer.Length && !TryConsumeAdditionalInput())
                 Fail("unexpected end of input");
 
-            return input[position++];
+            return buffer[position++];
         }
 
         protected void Token(char validToken)
@@ -171,9 +180,9 @@ namespace Simple.Json.Parsers
 
         protected void Whitespace()
         {
-            while (position < input.Length)
+            while (position < buffer.Length || TryConsumeAdditionalInput())
             {
-                var token = input[position];
+                var token = buffer[position];
                 switch (token)
                 {
                     case '\n':
@@ -189,12 +198,19 @@ namespace Simple.Json.Parsers
 
         protected void Fail(string message)
         {
-            var linePosition = 1;
-            var charPosition = 1;
+            var linePosition = this.linePosition;
+            var charPosition = this.charPosition;
 
+            GetLineAndCharPositions(ref linePosition, ref charPosition);
+
+            throw new FormatException(string.Format("Line {0}, Char {1}: {2}", linePosition, charPosition, message ?? "unexpected input"));
+        }
+
+        void GetLineAndCharPositions(ref int linePosition, ref int charPosition)
+        {
             for (var i = 0; i < position; i++)
             {
-                if (input[i] == '\n')
+                if (buffer[i] == '\n')
                 {
                     linePosition++;
                     charPosition = 0;
@@ -202,13 +218,27 @@ namespace Simple.Json.Parsers
                 else
                     charPosition++;
             }
-
-            throw new FormatException(string.Format("Line {0}, Char {1}: {2}", linePosition, charPosition, message ?? "unexpected input"));
         }
 
         int Peek()
         {
-            return position < input.Length ? input[position] : -1;
+            return position < buffer.Length || TryConsumeAdditionalInput() ? buffer[position] : -1;
+        }
+
+        bool TryConsumeAdditionalInput()
+        {
+            if (additionalInputReader == null)
+                return false;
+            
+            GetLineAndCharPositions(ref linePosition, ref charPosition);
+
+            var buffer = new char[BufferSize];
+            var count = additionalInputReader.Read(buffer, 0, buffer.Length);
+
+            this.buffer = new string(buffer, 0, count);
+            position = 0;
+
+            return count > 0;
         }
     }
 }

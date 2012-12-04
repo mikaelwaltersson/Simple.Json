@@ -89,5 +89,46 @@ namespace Simple.Json.Tests
         {
             Assert.Equal("{\"One\":1,\"Two\":2}", new JsonObject { { "One", 1 }, { "Two", 2 } }.ToString());
         }
+
+        [Fact]
+        public void JsonObjectIsDictionaryOfStringObjectPair()
+        {
+            var dictionary = (IDictionary<string, object>)new JsonObject();
+
+            dictionary.Add(new KeyValuePair<string, object>("a", 1.0));
+            dictionary.Add(new KeyValuePair<string, object>("b", 2.0));
+
+            Assert.Equal(2, dictionary.Count);
+            Assert.False(dictionary.IsReadOnly);
+
+            object a;
+            Assert.True(dictionary.TryGetValue("a", out a));
+            Assert.Equal(1.0, a);
+
+
+            Assert.Equal(new[] { "a", "b" }, dictionary.Keys.OrderBy(key => key));
+            Assert.Equal(new object[] { 1.0, 2.0 }, dictionary.Values.OrderBy(value => value));
+
+
+            var entries = new KeyValuePair<string, object>[2];
+            dictionary.CopyTo(entries, 0);
+            Array.Sort(entries, (x, y) => string.CompareOrdinal(x.Key, y.Key));
+
+            Assert.Equal(new[] { new KeyValuePair<string, object>("a", 1.0), new KeyValuePair<string, object>("b", 2.0) }, entries);
+
+
+            Assert.True(dictionary.ContainsKey("a"));
+            Assert.True(dictionary.Contains(new KeyValuePair<string, object>("a", 1.0)));
+            Assert.False(dictionary.Contains(new KeyValuePair<string, object>("a", 2.0)));
+
+            Assert.False(dictionary.Remove(new KeyValuePair<string, object>("a", 2.0)));
+            Assert.True(dictionary.Remove(new KeyValuePair<string, object>("a", 1.0)));
+
+            Assert.Equal(1, dictionary.Count);
+
+            dictionary.Clear();
+
+            Assert.Equal(0, dictionary.Count);
+        }
     }
 }

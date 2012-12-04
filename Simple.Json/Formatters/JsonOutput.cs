@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Simple.Json.Formatters
         static readonly string newLine = "\r\n";
         static readonly string indentFill = "\t";
 
-        StringBuilder output;
+        TextWriter writer;
         bool formatted;
         int maxDepth;
 
@@ -25,9 +26,9 @@ namespace Simple.Json.Formatters
         bool isAtNewLine;
 
 
-        public JsonOutput(StringBuilder output, bool formatted, int maxDepth)
+        public JsonOutput(TextWriter writer, bool formatted, int maxDepth)
         {
-            this.output = output;
+            this.writer = writer;
             this.formatted = formatted;
             this.maxDepth = maxDepth;
         }
@@ -119,7 +120,7 @@ namespace Simple.Json.Formatters
         void NewLine()
         {
             if (formatted)
-                output.Append(newLine);
+                writer.Write(newLine);
 
             isAtNewLine = true;
         }
@@ -127,7 +128,7 @@ namespace Simple.Json.Formatters
         void NextItem()
         {
             if (nextValueIsSubsequentItem)
-                output.Append(",");
+                writer.Write(",");
 
             if (nextValueStartsOnNewLine)
                 NewLine();
@@ -138,7 +139,7 @@ namespace Simple.Json.Formatters
 
         void WriteSeperator(string token)
         {
-            output.Append(formatted ? (' ' + token + ' ') : token);
+            writer.Write(formatted ? (' ' + token + ' ') : token);
         }
 
         void Write(string s)
@@ -148,13 +149,13 @@ namespace Simple.Json.Formatters
                 if (formatted)
                 {
                     for (var i = 0; i < indentLevel; i++)
-                        output.Append(indentFill);
+                        writer.Write(indentFill);
                 }
 
                 isAtNewLine = false;
             }
 
-            output.Append(s);
+            writer.Write(s);
         }
 
         void AssertIsNotAtRootLevel()

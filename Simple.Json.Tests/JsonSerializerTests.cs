@@ -585,6 +585,29 @@ namespace Simple.Json.Tests
         }
 
         [Fact]
+        public void CanParseAndOutputObjectAsDictionaryOfStringObjectPair()
+        {
+            var dictionary = serializer.ParseJson<IDictionary<string, object>>("{\"a\":1,\"b\":2}");
+
+            Assert.Equal(2, dictionary.Count);
+            Assert.Equal(1.0, dictionary["a"]);
+            Assert.Equal(2.0, dictionary["b"]);
+
+            Assert.Equal("{\"a\":1,\"b\":2}", serializer.ToJson(dictionary));
+        }
+
+        [Fact]
+        public void CanParseLargeJsonDocumentFromTextReader()
+        {
+            var contentChars  = new[] { '[', '0' }.Concat(Enumerable.Range(1, 10000).SelectMany(i => ", " + i)).Concat(new[] { ']' });
+
+            var intArray = (int[])serializer.ParseJson(new CharEnumerableAsTextReader(contentChars), typeof(int[]));
+
+            Assert.True(intArray.SequenceEqual(Enumerable.Range(0, 10001)));
+        }
+
+
+        [Fact]
         public void NumberOfInstanceAllocationsOfTypeSerializerIsLimited()
         {
             InstanceCountConstrained<TypeSerializer>.MaxInstanceCount = 0;
@@ -597,6 +620,8 @@ namespace Simple.Json.Tests
                 InstanceCountConstrained<TypeSerializer>.MaxInstanceCount = InstanceCountConstrained<TypeSerializer>.DefaultMaxInstanceCount;    
             }            
         }
+
+
 
         void AssertCanSerializeAndDeserializeValue<T>(T value)
         {
@@ -644,6 +669,37 @@ namespace Simple.Json.Tests
 
             return new JsonSerializer(typeSerializer);
         }
+
+        class CharEnumerableAsTextReader : TextReader
+        {
+            IEnumerator<char> charsEnumerator;
+            int current;
+
+            public CharEnumerableAsTextReader(IEnumerable<char> chars)
+            {
+                charsEnumerator = chars.GetEnumerator();
+                MoveNext();
+            }
+
+            void MoveNext()
+            {
+                current = charsEnumerator.MoveNext() ? charsEnumerator.Current : -1;
+            }
+
+            public override int Peek()
+            {
+                return current;
+            }
+
+            public override int Read()
+            {
+                var previous = current;
+                
+                MoveNext();
+                return previous;
+            }
+        }
+
 
         public class SomeClassWithValue<T>
         {

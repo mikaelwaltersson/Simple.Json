@@ -12,7 +12,7 @@ type optional<'a> = Optional<'a>
 let undefined = optional<_> ()
 let specified x = optional<_> x
 let toJson<'a> (x : 'a) = JsonSerializer.Default.ToJson (x, typeof<'a>, false)
-let fromJson<'a> x : 'a = downcast JsonSerializer.Default.ParseJson (x, typeof<'a>)
+let fromJson<'a> (x : string) : 'a = downcast JsonSerializer.Default.ParseJson (x, typeof<'a>)
 
 
 

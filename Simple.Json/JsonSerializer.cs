@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,21 +33,37 @@ namespace Simple.Json
         }
 
 
-        public object ParseJson(string input, Type type)
-        {           
+        public object ParseJson(string s, Type type)
+        {
+            return ParseJson(new JsonParser(s), type);
+        }
+        
+        public object ParseJson(TextReader reader, Type type)
+        {
+            return ParseJson(new JsonParser(reader), type);
+        }
+
+        object ParseJson(JsonParser parser, Type type)
+        {
             var builderProvider = typeSerializer.GetBuilderProvider(type);
 
-            return new JsonParser(input).Parse(() => builderProvider);
+            return parser.Parse(() => builderProvider);
         }
 
         public string ToJson(object value, Type type, bool formatted)
         {
+            using (var writer = new StringWriter())
+            {
+                ToJson(writer, value, type, formatted);
+                return writer.ToString();
+           }            
+        }
+
+        public void ToJson(TextWriter writer, object value, Type type, bool formatted)
+        {
             var deconstructor = typeSerializer.GetDeconstructor(type);
-            var output = new StringBuilder();
 
-            deconstructor.Deconstruct(value, new JsonOutput(output, formatted, maxSerializeGraphDepth));
-
-            return output.ToString();
+            deconstructor.Deconstruct(value, new JsonOutput(writer, formatted, maxSerializeGraphDepth));
         }
 
 

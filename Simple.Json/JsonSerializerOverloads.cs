@@ -8,14 +8,14 @@ namespace Simple.Json
 {
     public static class JsonSerializerOverloads
     {
-        public static T ParseJson<T>(this IJsonSerializer serializer, string input)
+        public static T ParseJson<T>(this IJsonSerializer serializer, string s)
         {
-            return (T)serializer.ParseJson(input, typeof(T));
+            return (T)serializer.ParseJson(s, typeof(T));
         }
 
-        public static object ParseJson(this IJsonSerializer serializer, string input)
+        public static object ParseJson(this IJsonSerializer serializer, string s)
         {
-            return serializer.ParseJson(input, typeof(object));
+            return serializer.ParseJson(s, typeof(object));
         }
 
         public static string ToJson<T>(this IJsonSerializer serializer, T value)

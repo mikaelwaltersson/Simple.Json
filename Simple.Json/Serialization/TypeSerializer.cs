@@ -327,9 +327,13 @@ namespace Simple.Json.Serialization
                 return
                     type == typeof(object) ||
                     type == typeof(JsonObject) ||
+                    type == typeof(IDictionary<string, object>) ||                    
+                    type == typeof(ICollection<KeyValuePair<string, object>>) ||
                     type == typeof(IEnumerable<KeyValuePair<string, object>>) ||
-                    type == typeof(JsonArray) ||                    
-                    type == typeof(IEnumerable<object>) ||
+                    type == typeof(JsonArray) ||
+                    type == typeof(IList<object>) ||
+                    type == typeof(ICollection<object>) ||                    
+                    type == typeof(IEnumerable<object>) ||                    
                     (type == typeof(IEnumerable) && type != typeof(string) && !IsArrayOrCollection(type));
             }
 

@@ -8,8 +8,8 @@ namespace Simple.Json.Parsers
 {
     class Iso8601TimeSpanParser : BasicParser
     {
-        public Iso8601TimeSpanParser(string input)
-            : base(input)
+        public Iso8601TimeSpanParser(string buffer)
+            : base(buffer)
         {
         }
 

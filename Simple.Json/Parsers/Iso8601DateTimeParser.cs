@@ -9,8 +9,8 @@ namespace Simple.Json.Parsers
     class Iso8601DateTimeParser : BasicParser
     {
 
-        public Iso8601DateTimeParser(string input)
-            : base(input)
+        public Iso8601DateTimeParser(string buffer)
+            : base(buffer)
         {
         }
 

@@ -10,7 +10,7 @@ using Simple.Json.Serialization;
 
 namespace Simple.Json
 {
-    public class JsonObject : DynamicObject, IEnumerable<KeyValuePair<string, object>>, IObjectBuilder
+    public class JsonObject : DynamicObject, IDictionary<string, object>, IObjectBuilder
     {
         List<string> names = new List<string>();
         Dictionary<string, object> values = new Dictionary<string, object>();
@@ -21,11 +21,7 @@ namespace Simple.Json
             set
             {
                 if (value is Undefined)
-                {
-                    values.Remove(name);
-                    names.Remove(name);
-                    
-                }
+                    Remove(name);
                 else if (IsDefined(name))
                     values[name] = value;
                 else
@@ -38,6 +34,7 @@ namespace Simple.Json
             return values.ContainsKey(name);
         }
 
+
         public void Add(string name, object value)
         {
             if (value is Undefined)
@@ -47,30 +44,25 @@ namespace Simple.Json
             names.Add(name);
         }
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+
+        public bool Remove(string name)
         {
-            return names.Select(name => new KeyValuePair<string, object>(name, values[name])).GetEnumerator();
+            values.Remove(name);            
+            return names.Remove(name);
         }
+
+
+        public void Clear()
+        {
+            names.Clear();
+            values.Clear();            
+        }
+
+
 
         public IEnumerable<string> GetPropertyNames()
         {
             return names.AsEnumerable();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        object IObjectBuilder.End()
-        {
-            foreach (var name in names)
-            {
-                object value;
-                values.TryGetValue(name, out value);
-            }
-
-            return this;
         }
 
         public override IEnumerable<string> GetDynamicMemberNames()
@@ -95,6 +87,84 @@ namespace Simple.Json
         public override string ToString()
         {
             return JsonSerializer.Default.ToJson(this);
+        }
+
+        object IObjectBuilder.End()
+        {
+            foreach (var name in names)
+            {
+                object value;
+                values.TryGetValue(name, out value);
+            }
+
+            return this;
+        }
+
+        IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
+        {
+            return names.Select(name => new KeyValuePair<string, object>(name, values[name])).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<string, object>>)this).GetEnumerator();
+        }
+
+        ICollection<string> IDictionary<string, object>.Keys
+        {
+            get { return values.Keys; }
+        }
+
+        ICollection<object> IDictionary<string, object>.Values
+        {
+            get { return values.Values; }
+        }
+
+        bool IDictionary<string, object>.ContainsKey(string key)
+        {
+            return values.ContainsKey(key);
+        }
+
+
+        bool IDictionary<string, object>.TryGetValue(string key, out object value)
+        {
+            return values.TryGetValue(key, out value);
+        }
+
+
+        void ICollection<KeyValuePair<string, object>>.Add(KeyValuePair<string, object> item)
+        {
+            Add(item.Key, item.Value);
+        }
+
+        bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> item)
+        {
+            return values.Contains(item);
+        }
+
+        void ICollection<KeyValuePair<string, object>>.CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<string, object>>)values).CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<KeyValuePair<string, object>>.Remove(KeyValuePair<string, object> item)
+        {
+            var itemRemoved = ((ICollection<KeyValuePair<string, object>>)values).Remove(item);
+
+            if (itemRemoved)            
+                names.Remove(item.Key);
+
+            return itemRemoved;
+        }
+
+        int ICollection<KeyValuePair<string, object>>.Count
+        {
+            get { return values.Count; }
+        }
+
+        bool ICollection<KeyValuePair<string, object>>.IsReadOnly
+        {
+            get { return false; }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
@@ -10,8 +11,13 @@ namespace Simple.Json.Parsers
 {
     class JsonParser : BasicParser
     {
-        public JsonParser(string input)
-            : base(input)
+        public JsonParser(string buffer)
+            : base(buffer)
+        {
+        }
+
+        public JsonParser(TextReader reader)
+            : base(string.Empty, Argument.NotNull(reader, "reader"))
         {
         }
 
