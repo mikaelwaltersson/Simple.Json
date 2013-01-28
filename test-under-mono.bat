@@ -1,0 +1,2 @@
+mono dependencies\xunit\xunit.console.clr4.exe Simple.Json.Tests\bin\Debug\Simple.Json.Tests.dll
+mono dependencies\xunit\xunit.console.clr4.exe Simple.Json.Tests.FSharp\bin\Debug\Simple.Json.Tests.FSharp.dll

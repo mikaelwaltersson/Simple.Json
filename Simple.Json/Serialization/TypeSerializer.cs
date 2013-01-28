@@ -173,7 +173,7 @@ namespace Simple.Json.Serialization
 
             MethodInfo GetMethodInfoForPublicStaticDelegate(Delegate method)
             {
-                var methodInfo = method.GetMethodInfo();
+                var methodInfo = method.Method;
 
                 if (!(methodInfo.IsStatic && methodInfo.IsPublic && methodInfo.DeclaringType.IsVisible))
                     throw new ArgumentException("Convert value method must be public and static");
@@ -416,7 +416,7 @@ namespace Simple.Json.Serialization
                 ImplementCallUntypedDeconstructorBase(ilGenerator);
                 ImplementTryConvertAndOutput(otherTypes, ilGenerator);
                 ImplementCallTypeSerializerFromUntypedDeconstructor(typeSerializerFieldBuilder, ilGenerator);
-
+                
                 ilGenerator.Emit(OpCodes.Ldc_I4_0);
                 ilGenerator.Emit(OpCodes.Ret);
             }
@@ -1006,28 +1006,23 @@ namespace Simple.Json.Serialization
             {
                 var typeLocal = ilGenerator.DeclareLocal(typeof(Type));
                 var isClassOrInterfaceLabel = ilGenerator.DefineLabel();
-                var outputEmptyObjectLabel = ilGenerator.DefineLabel();
                 var continueLabel = ilGenerator.DefineLabel();
-
+                
                 ilGenerator.Emit(OpCodes.Ldarg_1);
                 ilGenerator.Emit(OpCodes.Call, typeof(object).GetMethod("GetType"));
                 ilGenerator.Emit(OpCodes.Stloc, typeLocal);
-
+                
                 ilGenerator.Emit(OpCodes.Ldloc, typeLocal);
                 ilGenerator.Emit(OpCodes.Callvirt, typeof(Type).GetProperty("IsClass").GetGetMethod());
                 ilGenerator.Emit(OpCodes.Brtrue_S, isClassOrInterfaceLabel);
-                
+
                 ilGenerator.Emit(OpCodes.Ldloc, typeLocal);
                 ilGenerator.Emit(OpCodes.Callvirt, typeof(Type).GetProperty("IsInterface").GetGetMethod());
                 ilGenerator.Emit(OpCodes.Brtrue_S, isClassOrInterfaceLabel);
-
+                
                 ilGenerator.Emit(OpCodes.Br_S, continueLabel);
                 
-                ilGenerator.MarkLabel(isClassOrInterfaceLabel);                
-                ilGenerator.Emit(OpCodes.Ldloc, typeLocal);
-                ilGenerator.Emit(OpCodes.Ldtoken, typeof(object));
-                ilGenerator.Emit(OpCodes.Call, typeof(object).GetMethod("Equals", BindingFlags.Public | BindingFlags.Static));
-                ilGenerator.Emit(OpCodes.Brtrue_S, outputEmptyObjectLabel);
+                ilGenerator.MarkLabel(isClassOrInterfaceLabel);
                 ilGenerator.Emit(OpCodes.Ldarg_0);
                 ilGenerator.Emit(OpCodes.Ldfld, typeSerializerField);
                 ilGenerator.Emit(OpCodes.Ldloc, typeLocal);
@@ -1036,19 +1031,9 @@ namespace Simple.Json.Serialization
                 ilGenerator.Emit(OpCodes.Ldarg_2);
                 ilGenerator.Emit(OpCodes.Callvirt, typeof(IDeconstructor).GetMethod("Deconstruct"));
                 ilGenerator.Emit(OpCodes.Ldc_I4_1);
-                ilGenerator.Emit(OpCodes.Ret);
+                ilGenerator.Emit(OpCodes.Ret);               
 
-                ilGenerator.MarkLabel(outputEmptyObjectLabel);
-                ilGenerator.Emit(OpCodes.Ldarg_2);
-                ilGenerator.Emit(OpCodes.Callvirt, typeof(IJsonOutput).GetMethod("BeginObject"));
-                ilGenerator.Emit(OpCodes.Ldarg_2);
-                ilGenerator.Emit(OpCodes.Callvirt, typeof(IJsonOutput).GetMethod("EndObject"));
-                ilGenerator.Emit(OpCodes.Ldc_I4_1);
-                ilGenerator.Emit(OpCodes.Ret);
-
-                ilGenerator.MarkLabel(continueLabel);
-
-                
+                ilGenerator.MarkLabel(continueLabel);                
             }
             
             void ImplementDeconstructObject(Type type, ILGenerator ilGenerator)

@@ -58,6 +58,13 @@ namespace Simple.Json.Serialization
                 output.EndArray();
                 return true;
             }
+
+            if (value.GetType() == typeof(object))
+            {
+                output.BeginObject();
+                output.EndObject();
+                return true;
+            }
             
             return false;
         }

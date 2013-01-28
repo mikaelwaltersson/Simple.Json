@@ -269,10 +269,17 @@ namespace Simple.Json.Tests
         }
 
         [Fact]
-        public void CanSerializeEmptyArraysAndObjects()
+        public void CanDeserializeEmptyArraysAndObjects()
         {
             Assert.Empty((IEnumerable)serializer.ParseJson("{}"));
             Assert.Empty((IEnumerable)serializer.ParseJson("[]"));             
+        }
+
+        [Fact]
+        public void CanSerializeEmptyArraysAndObjects()
+        {
+            Assert.Equal("{}", serializer.ToJson(new object()));
+            Assert.Equal("[]", serializer.ToJson(EmptyEnumerable));
         }
 
 
@@ -668,6 +675,11 @@ namespace Simple.Json.Tests
             configureTypeSerializer(typeSerializer.Configuration);
 
             return new JsonSerializer(typeSerializer);
+        }
+
+        static IEnumerable EmptyEnumerable
+        {
+            get { yield break; }
         }
 
         class CharEnumerableAsTextReader : TextReader
