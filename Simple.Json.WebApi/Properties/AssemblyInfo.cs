@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Simple.Json.Tests")]
+[assembly: AssemblyTitle("Simple.Json.WebApi")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advise Solutions")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c5e0e9ee-4cd9-4b32-9fbd-05b3b7f217e0")]
+[assembly: Guid("28bd384c-14ed-463b-9fb9-b06cae95aac5")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,4 +35,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.2")]
 [assembly: AssemblyFileVersion("1.0.0.2")]
 
-[assembly: InternalsVisibleTo(Simple.Json.Serialization.TypeSerializer.DynamicAssemblyName)]
