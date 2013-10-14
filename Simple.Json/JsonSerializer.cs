@@ -33,14 +33,35 @@ namespace Simple.Json
         }
 
 
+
+        public object ParseJson(string s)
+        {
+            return ParseJson(s, typeof(object));
+        }
+
         public object ParseJson(string s, Type type)
         {
             return ParseJson(new JsonParser(s), type);
         }
-        
+
+        public T ParseJson<T>(string s)
+        {
+            return (T)ParseJson(s, typeof(T));
+        }
+
+        public object ParseJson(TextReader reader)
+        {
+            return ParseJson(new JsonParser(reader), typeof(object));
+        }
+
         public object ParseJson(TextReader reader, Type type)
         {
             return ParseJson(new JsonParser(reader), type);
+        }
+
+        public T ParseJson<T>(TextReader reader)
+        {
+            return (T)ParseJson(reader, typeof(T));
         }
 
         object ParseJson(JsonParser parser, Type type)
@@ -49,6 +70,7 @@ namespace Simple.Json
 
             return parser.Parse(() => builderProvider);
         }
+
 
         public string ToJson(object value, Type type, bool formatted)
         {
@@ -59,6 +81,11 @@ namespace Simple.Json
            }            
         }
 
+        public string ToJson<T>(T value, bool formatted = false)
+        {
+            return ToJson(value, typeof(T), formatted);
+        }
+
         public void ToJson(TextWriter writer, object value, Type type, bool formatted)
         {
             var deconstructor = typeSerializer.GetDeconstructor(type);
@@ -66,9 +93,9 @@ namespace Simple.Json
             deconstructor.Deconstruct(value, new JsonOutput(writer, formatted, maxSerializeGraphDepth));
         }
 
-
-
-
-
+        public void ToJson<T>(TextWriter writer, T value, bool formatted = false)
+        {
+            ToJson(writer, value, typeof(T), formatted);
+        }
     }
 }
