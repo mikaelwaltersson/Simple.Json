@@ -9,6 +9,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Simple.Json.Tests.FSharp", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8AD750C8-FEE6-4127-90FF-49ECA2745FAD}"
 	ProjectSection(SolutionItems) = preProject
+		nuget\Simple.Json\Package.no-webapi.nuspec = nuget\Simple.Json\Package.no-webapi.nuspec
 		nuget\Simple.Json\Package.nuspec = nuget\Simple.Json\Package.nuspec
 	EndProjectSection
 EndProject
