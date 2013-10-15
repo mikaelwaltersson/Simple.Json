@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Simple.Json-no-webapi</id>
+    <version>1.0.0.3</version>
+    <authors>Mikael Waltersson, Advise Solutions</authors>
+    <owners>Mikael Waltersson, Advise Solutions</owners>
+    <licenseUrl>http://simplejson.codeplex.com/license</licenseUrl>
+    <projectUrl>http://simplejson.codeplex.com/</projectUrl>
+    <iconUrl>http://dl.dropbox.com/u/14427110/adviselogo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Easy to use framework for serializing to and from json. Supports typed dto objects, dynamic dto objects and immutable dto types like F# record types. Can differ between null values and "not supplied" values. One of the fastest json serializers for .NET there is. Supports Microsoft Web API.</description>
+    <tags>Json REST Serialization Parsing WebApi</tags>
+  </metadata>
+  <files>
+    <file src="lib\net45\Simple.Json.dll" target="lib\net45\" />
+    <file src="lib\net45\Simple.Json.pdb" target="lib\net45\" />
+  </files>  
+</package>
