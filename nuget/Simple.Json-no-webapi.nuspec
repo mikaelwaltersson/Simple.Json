@@ -13,7 +13,8 @@
     <tags>Json REST Serialization Parsing WebApi</tags>
   </metadata>
   <files>
-    <file src="lib\net45\Simple.Json.dll" target="lib\net45\" />
-    <file src="lib\net45\Simple.Json.pdb" target="lib\net45\" />
+    <file src="..\Simple.Json\bin\Release\Simple.Json.dll" target="lib\net45\" />
+    <file src="..\Simple.Json\bin\Release\Simple.Json.pdb" target="lib\net45\" />
+    <file src="..\Simple.Json\**\*.cs" target="src\Simple.Json\" />
   </files>  
 </package>
