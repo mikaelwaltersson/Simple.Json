@@ -832,6 +832,12 @@ namespace Simple.Json.Serialization
 
             static bool TryGetStaticParseMethod(Type type, out MethodInfo parseMethod)
             {
+                if (type.IsEnum)
+                {
+                    parseMethod = typeof(Enum).GetMethod("TryParse", new[] { typeof(string), type.MakeByRefType() });
+                    return true;
+                }
+
                 return
                     TryGetStaticParseMethod(type, out parseMethod, typeof(bool), "TryParse", typeof(string), typeof(IFormatProvider), type.MakeByRefType()) ||
                     TryGetStaticParseMethod(type, out parseMethod, type, "Parse", typeof(string), typeof(IFormatProvider)) ||
