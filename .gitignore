@@ -1,0 +1,10 @@
+/**/obj
+/**/bin
+/**/bin-4.0
+/**/.vs
+/**/_ReSharper.*
+/packages
+Thumbs.db
+*.orig
+*.user
+*.suo

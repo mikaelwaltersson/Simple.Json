@@ -144,10 +144,8 @@ namespace Simple.Json.Serialization
             {
                 var name = DynamicAssemblyName;
 
-                var appDomain = AppDomain.CurrentDomain;
                 var assemblyName = new AssemblyName(name);
-
-                var assemblyBuilder = appDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+                var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
 
                 return assemblyBuilder.DefineDynamicModule(name);
             }

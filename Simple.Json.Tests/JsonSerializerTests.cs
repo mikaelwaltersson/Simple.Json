@@ -253,7 +253,7 @@ namespace Simple.Json.Tests
 
             serializer.MaxSerializeGraphDepth += 1;
 
-            Assert.DoesNotThrow(() => serializer.ToJson(obj));
+            serializer.ToJson(obj);
         }
 
         [Fact]
@@ -264,8 +264,8 @@ namespace Simple.Json.Tests
             Assert.Throws<InvalidOperationException>(() => serializer.ToJson<object>(true));
             Assert.Throws<InvalidOperationException>(() => serializer.ToJson<object>(null));
 
-            Assert.DoesNotThrow(() => serializer.ToJson(new[]{ "hello json" }));
-            Assert.DoesNotThrow(() => serializer.ToJson(new { p1 = 54.5 }));
+            serializer.ToJson(new[]{ "hello json" });
+            serializer.ToJson(new { p1 = 54.5 });
         }
 
         [Fact]
@@ -400,8 +400,8 @@ namespace Simple.Json.Tests
         public void FallbacksToStringRepresentationOfValueTypesWithoutConversionMethod()
         {
             Assert.Equal(
-                "[\"Simple.Json.Tests.JsonSerializerTests+SomeStruct\",\"ReadWrite\"]", 
-                serializer.ToJson<object>(new object[] { new SomeStruct(), FileAccess.ReadWrite }));
+                "[\"Simple.Json.Tests.JsonSerializerTests+SomeStruct\",\"Value2\"]", 
+                serializer.ToJson<object>(new object[] { new SomeStruct(), SomeEnum.Value2 }));
 
             Assert.Equal(
                 "{\"value\":\"Simple.Json.Tests.JsonSerializerTests+SomeStruct\"}",
@@ -501,6 +501,15 @@ namespace Simple.Json.Tests
             Assert.Equal(123, serializer.ParseJson<SomeClassWithValue<SomeStructWithParse2>>(json).Value.Value);
         }
 
+        [Fact(Skip = "Enum support not implemented yet")]
+        public void CanParseEnumValueTypes()
+        {
+            var json = "{\"value\":\"Value2\"}";
+
+            Assert.Equal(SomeEnum.Value2, serializer.ParseJson<SomeClassWithValue<SomeEnum>>(json).Value);
+            Assert.Equal(SomeEnum.Value2, serializer.ParseJson<SomeClassWithValue<SomeEnum?>>(json).Value);
+        }
+
         [Fact]
         public void CanParseValueTypesWithCustomConvertMethods()
         {
@@ -508,7 +517,7 @@ namespace Simple.Json.Tests
 
             serializer = NewSerializerWithConfiguration(configuration => configuration.RegisterConvertFromJsonValueMethod(Methods.GetSomeStructFromStringValue));
 
-            Assert.DoesNotThrow(() => serializer.ParseJson<SomeClassWithValue<SomeStruct>>("{\"value\":\"Simple.Json.Tests.JsonSerializerTests+SomeStruct\"}"));
+            serializer.ParseJson<SomeClassWithValue<SomeStruct>>("{\"value\":\"Simple.Json.Tests.JsonSerializerTests+SomeStruct\"}");
             Assert.Throws<FormatException>(() => serializer.ParseJson<SomeClassWithValue<SomeStruct>>("{\"value\":\"BAD DATA\"}"));
         }
 
@@ -535,7 +544,7 @@ namespace Simple.Json.Tests
             serializer = NewSerializerWithConfiguration(configuration => configuration.EnableMandatoryFieldsValidation = true);
 
             Assert.Throws<FormatException>(() => serializer.ParseJson<SomeClassWithOptionalPropertiesAndFields>("{\"y\":null,\"z\":null,\"w\":null}"));
-            Assert.DoesNotThrow(() => serializer.ParseJson<SomeClassWithOptionalPropertiesAndFields>("{\"x\":null}"));
+            serializer.ParseJson<SomeClassWithOptionalPropertiesAndFields>("{\"x\":null}");
         }
 
 
@@ -580,15 +589,14 @@ namespace Simple.Json.Tests
         public void ConfiguredConvertToMethodsMustReturnNativeJsonPrimitiveTypes()
         {
             Assert.Throws<ArgumentException>(() => NewSerializerWithConfiguration(configuration => configuration.RegisterConvertToJsonValueMethod<SomeStruct, int>(Methods.ConvertTo<SomeStruct, int>)));
-
-            Assert.DoesNotThrow(
-                () => NewSerializerWithConfiguration(
-                    configuration =>
-                    {
-                        configuration.RegisterConvertToJsonValueMethod<SomeStruct, double>(Methods.ConvertTo<SomeStruct, double>);
-                        configuration.RegisterConvertToJsonValueMethod<SomeStruct, bool>(Methods.ConvertTo<SomeStruct, bool>);
-                        configuration.RegisterConvertToJsonValueMethod<SomeStruct, string>(Methods.ConvertTo<SomeStruct, string>);
-                    }));
+            
+            NewSerializerWithConfiguration(
+                configuration =>
+                {
+                    configuration.RegisterConvertToJsonValueMethod<SomeStruct, double>(Methods.ConvertTo<SomeStruct, double>);
+                    configuration.RegisterConvertToJsonValueMethod<SomeStruct, bool>(Methods.ConvertTo<SomeStruct, bool>);
+                    configuration.RegisterConvertToJsonValueMethod<SomeStruct, string>(Methods.ConvertTo<SomeStruct, string>);
+                });
         }
 
         [Fact]
@@ -761,9 +769,14 @@ namespace Simple.Json.Tests
             }
         }
 
+        public enum SomeEnum
+        {
+            Value1, Value2, Value3
+        }
+
         public struct SomeStruct
         {
-        }
+        }        
 
         public struct SomeStructWithTryParse1
         {
@@ -808,7 +821,7 @@ namespace Simple.Json.Tests
                 return new SomeStructWithParse2 { Value = int.Parse(s) };
             }
         }
-
+        
         public abstract class SomeAbstractClass
         {             
         }

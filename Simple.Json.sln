@@ -1,21 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8AD750C8-FEE6-4127-90FF-49ECA2745FAD}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		nuget\Simple.Json-no-webapi.nuspec = nuget\Simple.Json-no-webapi.nuspec
+		nuget\Simple.Json.nuspec = nuget\Simple.Json.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{7F0EE27B-A9EB-47EE-AC1C-F4FF1490E4FB}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Json", "Simple.Json\Simple.Json.csproj", "{D9501F9B-C529-47B2-B7B4-D9EBD5B19706}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Json.Tests", "Simple.Json.Tests\Simple.Json.Tests.csproj", "{FAB15C5D-177F-4A85-BFFE-41CE2073B490}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Simple.Json.Tests.FSharp", "Simple.Json.Tests.FSharp\Simple.Json.Tests.FSharp.fsproj", "{EF0AC919-4FCD-4B9B-804F-999B5D42F551}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8AD750C8-FEE6-4127-90FF-49ECA2745FAD}"
-	ProjectSection(SolutionItems) = preProject
-		nuget\Simple.Json-no-webapi.nuspec = nuget\Simple.Json-no-webapi.nuspec
-		nuget\Simple.Json.nuspec = nuget\Simple.Json.nuspec
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkPerformanceTests", "benchmarks\FrameworkPerformanceTests\FrameworkPerformanceTests.csproj", "{F02FE06B-5DDA-4B08-AA00-F1EC8C00FAEE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{7F0EE27B-A9EB-47EE-AC1C-F4FF1490E4FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Json.WebApi", "Simple.Json.WebApi\Simple.Json.WebApi.csproj", "{101E66B7-B9D9-4E56-8F3A-4997E274538B}"
 EndProject
